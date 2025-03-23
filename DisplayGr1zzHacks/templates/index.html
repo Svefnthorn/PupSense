@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Permanence Assistant</title>
+    <title>PupSense</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -13,17 +13,15 @@
     </div>
     
     <div class="container">
-        <h1>OBJECT PERMANENCE <br> ASSISTANT</h1>
+        <h1>PupSense</h1>
         
         <!-- Location Map Box -->
-        <div class="map-container">
-            <div class="map-placeholder">Location Map</div>
-        </div>
+        
 
         <!-- Live Video and Heartbeat Graph Side by Side -->
         <div class="video-graph-section">
             <div class="video-container">
-                <video id="live-video" width="100%" height="100%" autoplay></video>
+                <img src="{{ url_for('video_feed') }}" width="100%" height="100%">
             </div>
 
             <div class="heartbeat-container">
@@ -33,26 +31,12 @@
 
         <!-- Info Box -->
         <div class="info-container">
-            <p><strong>ROOM SIZE:</strong></p>
-            <p><strong>TIME:</strong></p>
-            <p><strong>CURRENT DISTANCE:</strong></p>
+            <p><strong>ROOM SIZE: 20 by 13</strong></p>
+            <p><strong>TIME: <span id="clock"></span></strong></p>
         </div>
     </div>
 
     <script>
-        // JavaScript to access the camera
-        async function startVideo() {
-            const videoElement = document.getElementById('live-video');
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                videoElement.srcObject = stream;
-            } catch (error) {
-                console.error("Error accessing the camera:", error);
-            }
-        }
-
-        window.onload = startVideo;
-
         // Custom Heartbeat Graph with Axes
         const canvas = document.getElementById("heartbeatCanvas");
         const ctx = canvas.getContext("2d");
@@ -138,6 +122,22 @@
         }
 
         drawHeartbeat();
+
+    
+    function updateClock() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        document.getElementById('clock').innerText = `${hours}:${minutes}:${seconds}`;
+    }
+
+    // Update the clock every second
+    setInterval(updateClock, 1000);
+
+    // Initial call to show clock immediately on load
+    updateClock();
+
     </script>
 </body>
 </html>
